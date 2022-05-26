@@ -3,6 +3,17 @@ import { useFetch } from './useFetch';
 import Follower from './Follower';
 function App() {
   const { loading, data } = useFetch();
+  const [page, setPage] = useState(0);
+  const [followers, setFollowers] = useState([]);
+
+  const handlePage = (index) => {
+    setPage(index);
+  };
+
+  useEffect(() => {
+    if (loading) return;
+    setFollowers(data[page]);
+  }, [loading]);
   return (
     <main>
       <div className='section-title'>
@@ -11,10 +22,27 @@ function App() {
       </div>
       <section className='section-title'>
         <div className='container'>
-          {data.map((follower) => {
+          {followers.map((follower) => {
             return <Follower key={follower.id} {...follower} />;
           })}
         </div>
+        {loading ? (
+          loading
+        ) : (
+          <div className='btn-container'>
+            {data.map((item, index) => {
+              return (
+                <button
+                  key={index}
+                  className='page-btn'
+                  onClick={() => handlePage(index)}
+                >
+                  {index + 1}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </section>
     </main>
   );
